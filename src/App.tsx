@@ -3,13 +3,18 @@ import './App.css'
 
 function App() {
   const [result, setResult] = useState<number>(0)
-  const [numeroDigitado, setNumeroDigitado] = useState<any>([])
-  const [indexArrayNumber, setIndexArrayNumber] = useState<number>(0)
-  const [operator, setOperator] = useState<string>('') 
+  const [num1, setNum1] = useState<number>(0)
+  const [num2, setNum2] = useState<number>(0)
+  const [numeroDigitando, setNumerDigitando] = useState<number>(1)
+  const [operator, setOperator] = useState<string | null>(null) 
 
   useEffect(() => {
-    console.log('numeroDigitado xxx -> ', numeroDigitado)
-  },[numeroDigitado])
+    console.log('num1 xxx -> ', num1)
+  },[num1])
+
+  useEffect(() => {
+    console.log('num2 xxx -> ', num2)
+  },[num2])
 
   useEffect(() => {
     console.log('operator xxx -> ', operator)
@@ -17,21 +22,43 @@ function App() {
 
   function handleClickNumber(value: number | string): any {
     if (typeof value === 'number') {
-        // setNumeroDigitado([...numeroDigitado, value])
-
-      const teste = [
-        ...numeroDigitado,
-        ...numeroDigitado[indexArrayNumber] = [...numeroDigitado[indexArrayNumber], value]
-      ]
-
-      setNumeroDigitado(teste)
-
- 
-    } else if (value === 'plus') {
+      if (numeroDigitando === 1) {
+        const newNumber = String(num1) + String(value);
+        setNum1(Number(newNumber));
+      } else if (numeroDigitando === 2) {
+        const newNumber = String(num2) + String(value);
+        setNum2(Number(newNumber));
+      }
+    }
+    else if (value === 'plus') {
       setOperator('plus')
-      setIndexArrayNumber(state => state + 1)
+      setNumerDigitando(2)
     }
 
+    else if (value === 'minus') {
+      setOperator('minus')
+      setNumerDigitando(2)
+    }
+
+    else if (value === 'clear') {
+      setOperator(null)
+      setNum1(0)
+      setNum2(0)
+      setResult(0)
+    }
+
+    else if (value === 'equal') {
+      setOperator(null)
+      setNumerDigitando(1)
+
+      if (operator === 'plus') {
+        const total = num1 + num2
+        setResult(total)
+      } else if (operator === 'minus') {
+        const total = num1 - num2
+        setResult(total)
+      }
+    }
   }
 
   return (
@@ -44,7 +71,11 @@ function App() {
         <thead>
           <tr>
             <td colSpan={4} style={{ fontWeight: 'bold', fontSize: 20 }}>
-              {result}
+              { result !== 0 && result}
+              { result === 0 && num1 !== 0 && num1 }
+              { result === 0 && operator === 'plus' && ' + ' }  
+              { result === 0 && operator === 'minus' && ' - ' }  
+              { result === 0 && num2 !== 0&& num2 }
             </td>
           </tr>
           <tr>
@@ -65,9 +96,7 @@ function App() {
             <td>
               <button onClick={() => handleClickNumber(9)}>9</button>
             </td>
-            <td>
-              <button onClick={() => handleClickNumber(10)}>10</button>
-            </td>
+            <td>x</td>
           </tr>
           <tr>
             <td>
@@ -79,7 +108,9 @@ function App() {
             <td>
               <button onClick={() => handleClickNumber(6)}>6</button>
             </td>
-            <td>x</td>
+            <td>
+              <button onClick={() => handleClickNumber('minus')}>-</button>
+            </td>
           </tr>
           <tr>
             <td>
@@ -101,7 +132,7 @@ function App() {
             </td>
             <td>.</td>
             <td>
-              <button onClick={() => handleClickNumber('clear')}>clear</button>
+              <button onClick={() => handleClickNumber('clear')}>AC</button>
             </td>
             <td>
               <button onClick={() => handleClickNumber('equal')}>=</button>
