@@ -7,13 +7,20 @@ interface Calculator {
   numeroDigitando: number
 }
 
-export const calculatorReducer = (state: Calculator, action: any): Calculator => {
+interface CalculatorAction {
+  type: ActionTypes,
+  payload?: {
+    number?: string
+  }
+}
+
+export const calculatorReducer = (state: Calculator, action: CalculatorAction): Calculator => {
   switch (action.type) {
     case ActionTypes.ADD_NUM: {
-      const number = action.number
+      const number = action?.payload?.number
 
-      if (state.numeroDigitando === 1) {
-        return { ...state, num1 : state.num1 + number } 
+      if (state.numeroDigitando === 1 && number) {
+        return { ...state, num1 : state.num1 + number} 
       } 
       if (state.numeroDigitando === 2) {
         return { ...state, num2 : state.num2 + number } 
@@ -21,7 +28,7 @@ export const calculatorReducer = (state: Calculator, action: any): Calculator =>
     }
 
     case ActionTypes.ADD_FLOAT_POINT: {
-     
+
       if (state.numeroDigitando === 1) {
         const num1String = String(state.num1)
         return { 

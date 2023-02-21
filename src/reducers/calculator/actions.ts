@@ -9,49 +9,53 @@ export enum ActionTypes {
   SHOW_RESULT = 'SHOW_RESULT'
 }
 
-export function selectPlusOperatorAction (): any {
+interface IAction {
+  type: ActionTypes
+}
+
+export function selectPlusOperatorAction (): IAction {
   return {
     type: ActionTypes.SELECT_PLUS_OPERATOR
   }
 }
 
-export function selectMinusOperatorAction (): any {
+export function selectMinusOperatorAction (): IAction {
   return {
     type: ActionTypes.SELECT_MINUS_OPERATOR
   }
 }
 
-export function selectMultiplicatorOperatorAction (): any {
+export function selectMultiplicatorOperatorAction (): IAction {
   return {
     type: ActionTypes.SELECT_MULTIPLICATION_OPERATOR
   }
 }
 
-export function selectDivisionOperatorAction (): any {
+export function selectDivisionOperatorAction (): IAction {
   return {
     type: ActionTypes.SELECT_DIVISION_OPERATOR
   }
 }
 
-export function addNumAction (): any {
+export function addNumAction (): IAction {
   return {
     type: ActionTypes.ADD_NUM
   }
 }
 
-export function addFloatPointAction (): any {
+export function addFloatPointAction (): IAction {
   return {
     type: ActionTypes.ADD_FLOAT_POINT
   }
 }
 
-export function resetCalculator (): any {
+export function resetCalculator (): IAction {
   return {
     type: ActionTypes.RESET_CALCULATOR
   }
 }
 
-export function showResult (): any {
+export function showResult (): IAction {
   return {
     type: ActionTypes.SHOW_RESULT
   }

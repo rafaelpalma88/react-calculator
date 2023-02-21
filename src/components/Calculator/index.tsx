@@ -29,7 +29,12 @@ export const Calculator = () => {
   }
 
   function handleClickNumber(value: string): void {
-    dispatch({ type: 'ADD_NUM', number: value });
+    dispatch({ 
+      type: 'ADD_NUM',
+      payload: { 
+        number: value 
+      } 
+    });
   }
 
   function handleAddFloatPoint(): void {
