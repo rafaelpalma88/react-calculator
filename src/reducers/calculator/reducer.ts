@@ -1,13 +1,13 @@
 import { ActionTypes } from './actions'
 
 interface Calculator {
-  num1: string
+  num1: string | number
   num2: string
   operator: string | null
   numeroDigitando: number
 }
 
-export const calculatorReducer = (state: Calculator, action: any): any => {
+export const calculatorReducer = (state: Calculator, action: any): Calculator => {
   switch (action.type) {
     case ActionTypes.ADD_NUM: {
       const number = action.number
@@ -21,16 +21,19 @@ export const calculatorReducer = (state: Calculator, action: any): any => {
     }
 
     case ActionTypes.ADD_FLOAT_POINT: {
+     
       if (state.numeroDigitando === 1) {
+        const num1String = String(state.num1)
         return { 
           ...state, 
-          num1 : !state.num1.includes('.') ? state.num1 + '.' : state.num1 
+          num1 : !num1String.includes('.') ? state.num1 + '.' : state.num1 
         } 
       } 
       if (state.numeroDigitando === 2) {
+        const num2String =  String(state.num2)
         return { 
           ...state, 
-          num2 : !state.num2.includes('.') ? state.num2 + '.' : state.num2
+          num2 : !num2String.includes('.') ? state.num2 + '.' : state.num2
         } 
       } 
     }
@@ -70,6 +73,7 @@ export const calculatorReducer = (state: Calculator, action: any): any => {
             num1: Number(state.num1) + Number(state.num2),
             num2: '',
             operator: null,
+            numeroDigitando: 1
           };
         case 'minus': 
           return {
@@ -77,6 +81,7 @@ export const calculatorReducer = (state: Calculator, action: any): any => {
             num1: Number(state.num1) - Number(state.num2),
             num2: '',
             operator: null,
+            numeroDigitando: 1
           };
         case 'multiplication': 
           return {
@@ -84,6 +89,7 @@ export const calculatorReducer = (state: Calculator, action: any): any => {
             num1: Number(state.num1) * Number(state.num2),
             num2: '',
             operator: null,
+            numeroDigitando: 1
           };
         case 'division': 
           return {
@@ -91,6 +97,7 @@ export const calculatorReducer = (state: Calculator, action: any): any => {
             num1: Number(state.num1) / Number(state.num2),
             num2: '',
             operator: null,
+            numeroDigitando: 1
           };
         default:
           return {

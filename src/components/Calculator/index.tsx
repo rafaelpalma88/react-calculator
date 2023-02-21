@@ -33,7 +33,7 @@ export const Calculator = () => {
   }
 
   function handleAddFloatPoint(): any {
-    dispatch({ type: 'ADD_FLOAT_POINT', number: '.' });
+    dispatch({ type: 'ADD_FLOAT_POINT' });
   }
 
   function handleResetCalculator(): void {

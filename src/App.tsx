@@ -10,7 +10,6 @@ function App() {
         {/* <pre>{JSON.stringify(num1)}</pre> */}
         <Calculator />
       </div>
-     
     </div>
   )
 }
