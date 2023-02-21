@@ -24,13 +24,13 @@ export const calculatorReducer = (state: Calculator, action: any): any => {
       if (state.numeroDigitando === 1) {
         return { 
           ...state, 
-          num1 : !state.num1.includes('.') && state.num1 + '.' 
+          num1 : !state.num1.includes('.') ? state.num1 + '.' : state.num1 
         } 
       } 
       if (state.numeroDigitando === 2) {
         return { 
           ...state, 
-          num2 : !state.num2.includes('.') && state.num2 + '.' 
+          num2 : !state.num2.includes('.') ? state.num2 + '.' : state.num2
         } 
       } 
     }
