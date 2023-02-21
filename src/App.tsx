@@ -1,140 +1,210 @@
-import { useState, useEffect, useReducer } from 'react'
+import { useEffect, useReducer } from 'react'
 import './App.css'
 
 function App() {
-  const [result, setResult] = useState<number>(0)
-  // const [num1, setNum1] = useState<string>('')
-  const [num2, setNum2] = useState<string>('')
-  const [numeroDigitando, setNumerDigitando] = useState<number>(1)
-  const [operator, setOperator] = useState<string | null>(null) 
-
   interface Calculator {
     num1: string
     num2: string
-    operator: string
+    operator: string | null
+    numeroDigitando: number
   }
 
   const calculatorReducer = (state: Calculator, action: any): any => {
     switch (action.type) {
-      case 'ADD_NUM_1': {
+      case 'ADD_NUM': {
         const number = action.number
+
+        if (state.numeroDigitando === 1) {
+          return { ...state, num1 : state.num1 + number } 
+        } 
+        if (state.numeroDigitando === 2) {
+          return { ...state, num2 : state.num2 + number } 
+        } 
+      }
+
+      case 'ADD_FLOAT_POINT': {
+        if (state.numeroDigitando === 1) {
+          return { 
+            ...state, 
+            num1 : !state.num1.includes('.') && state.num1 + '.' 
+          } 
+        } 
+        if (state.numeroDigitando === 2) {
+          return { 
+            ...state, 
+            num2 : !state.num2.includes('.') && state.num2 + '.' 
+          } 
+        } 
+      }
+      case 'SELECT_PLUS_OPERATOR': {
+        return { 
+          ...state, 
+          operator: 'plus', 
+          numeroDigitando: 2 
+        } 
+      }
+      case 'SELECT_MINUS_OPERATOR': {
+        return { 
+          ...state, 
+          operator: 'minus', 
+          numeroDigitando: 2 
+        } 
+      }
+      case 'SELECT_MULTIPLICATION_OPERATOR': {
+        return { 
+          ...state, 
+          operator: 'multiplication', 
+          numeroDigitando: 2 
+        } 
+      }
+      case 'SELECT_DIVISION_OPERATOR': {
+        return { 
+          ...state, 
+          operator: 'division', 
+          numeroDigitando: 2 
+        } 
+      }
+      case 'SHOW_RESULT': {
+        switch (state.operator) {
+          case 'plus': 
+            return {
+              ...state,
+              // result: Number(state.num1) + Number(state.num2)
+              num1: Number(state.num1) + Number(state.num2),
+              num2: '',
+              operator: null,
+            };
+          case 'minus': 
+            return {
+              ...state,
+              num1: Number(state.num1) - Number(state.num2),
+              num2: '',
+              operator: null,
+            };
+          case 'multiplication': 
+            return {
+              ...state,
+              num1: Number(state.num1) * Number(state.num2),
+              num2: '',
+              operator: null,
+            };
+          case 'division': 
+            return {
+              ...state,
+              num1: Number(state.num1) / Number(state.num2),
+              num2: '',
+              operator: null,
+            };
+          default:
+            return {
+              ...state,
+            };
+        }
+      }
+      case 'RESET_CALCULATOR': {
         return {
-          num1: state.num1 + number
+          ...state,
+          num1: '',
+          num2: '',
+          numeroDigitando: 1,
+          operator: null,
         };
       }
-      case 'ADD_NUM_2': {
-        const number = action.number
-        return {
-          num2: state.num2 + number
-        };
-      }
-      case 'RESET_NUM1': {
-        return {
-          num1: ''
-        };
-      }
+      
       default:
         return state
     }
   }
 
-  const [calculatorState, dispatch] = useReducer(calculatorReducer, {
+  const initialValues = {
     num1: '',
     num2: '',
-    operator: null
-  })
+    operator: null,
+    numeroDigitando: 1,
+  }
 
-  function handleSelectPlusOperator(): any {
+  const [calculatorState, dispatch] = useReducer(calculatorReducer, initialValues)
+
+  function handleSelectPlusOperator(): void {
     dispatch({ type: 'SELECT_PLUS_OPERATOR' });
   }
 
-  function handleAddNum1(value: string): void {
-    dispatch({ 
-      type: 'ADD_NUM_1',
-      number: value
-    });
+  function handleSelectMinusOperator(): void {
+    dispatch({ type: 'SELECT_MINUS_OPERATOR' });
   }
 
-  function resetNum1(): any {
-    dispatch({ type: 'RESET_NUM1' });
+  function handleSelectMultiplicationOperator(): void {
+    dispatch({ type: 'SELECT_MULTIPLICATION_OPERATOR' });
   }
 
-  const { num1 } = calculatorState
-
-  // useEffect(() => {
-  //   console.log('num2 xxx -> ', num2)
-  // },[num2])
-
-  // useEffect(() => {
-  //   console.log('operator xxx -> ', operator)
-  // },[operator])
+  function handleSelectDivisionOperator(): void {
+    dispatch({ type: 'SELECT_DIVISION_OPERATOR' });
+  }
 
   function handleClickNumber(value: string): any {
-
-    if (value === 'plus') {
-      setOperator('plus')
-      setNumerDigitando(2)
-    }
-
-    else if (value === 'minus') {
-      setOperator('minus')
-      setNumerDigitando(2)
-    }
-
-    else if (value === 'clear') {
-      setOperator(null)
-      // setNum1('')
-      dispatch(resetNum1());
-      setNum2('')
-      setResult(0)
-    }
-
-    else if (value === 'equal') {
-      setOperator(null)
-      setNumerDigitando(1)
-
-      if (operator === 'plus') {
-        const total = Number(num1) + Number(num2)
-        setResult(total)
-      } else if (operator === 'minus') {
-        const total = Number(num1) - Number(num2)
-        setResult(total)
-      }
-    } else {
-      if (numeroDigitando === 1) {
-        // const newNumber = String(num1) + String(value);
-        handleAddNum1(value);
-        // dispatch(resetNum1());
-      } else if (numeroDigitando === 2) {
-        const newNumber = String(num2) + String(value);
-        setNum2(newNumber);
-      }
-    }
+    dispatch({ type: 'ADD_NUM', number: value });
   }
+
+  function handleAddFloatPoint(): any {
+    dispatch({ type: 'ADD_FLOAT_POINT', number: '.' });
+  }
+
+  function handleResetCalculator(): void {
+    dispatch({ type: 'RESET_CALCULATOR' });
+  }
+
+  function handleClickResult(): void {
+    dispatch({ type: 'SHOW_RESULT' });
+  }
+
+  const { num1, num2 , numeroDigitando, operator, result} = calculatorState
+
+  // useEffect(() => {
+  //   console.log('numeroDigitando xxxx -> ', numeroDigitando)
+  // }, [numeroDigitando])
+
+  // useEffect(() => {
+  //   console.log('num1 xxxx -> ', num1)
+  // }, [num1])
+
+  // useEffect(() => {
+  //   console.log('num2 xxxx -> ', num2)
+  // }, [num2])
+
+  // useEffect(() => {
+  //   console.log('operator xxxx -> ', operator)
+  // }, [operator])
+
+  // useEffect(() => {
+  //   console.log('result xxxx -> ', result)
+  // }, [result])
 
   return (
     <div className="App">
       <div>
         <h1>React Calculator</h1>
-        <pre>{JSON.stringify(num1)}</pre>
+        {/* <pre>{JSON.stringify(num1)}</pre> */}
       </div>
       <div className="card">
         <table>
         <thead>
           <tr>
             <td colSpan={4} style={{ fontWeight: 'bold', fontSize: 20 }}>
-              { result !== 0 && result}
-              { result === 0 && num1 !== '' && num1 }
-              { result === 0 && operator === 'plus' && ' + ' }  
-              { result === 0 && operator === 'minus' && ' - ' }  
-              { result === 0 && num2 !== '' && num2 }
+              { num1 !== '' ? num1 : '0'}
+              { operator === 'plus' && ' + ' }  
+              { operator === 'minus' && ' - ' }  
+              { operator === 'multiplication' && ' x ' }  
+              { operator === 'division' && ' / ' }  
+              { num2 !== '' && num2 }
             </td>
           </tr>
           <tr>
             <td>x</td>
             <td>x</td>
             <td>x</td>
-            <td>x</td>
+            <td>
+              <button onClick={handleSelectDivisionOperator}>/</button>
+            </td>
           </tr>
         </thead>
         <tbody>
@@ -148,7 +218,12 @@ function App() {
             <td>
               <button onClick={() => handleClickNumber('9')}>9</button>
             </td>
-            <td>x</td>
+            <td>
+              <button onClick={handleSelectMultiplicationOperator}>x</button>
+
+
+            
+            </td>
           </tr>
           <tr>
             <td>
@@ -161,7 +236,7 @@ function App() {
               <button onClick={() => handleClickNumber('6')}>6</button>
             </td>
             <td>
-              <button onClick={() => handleClickNumber('minus')}>-</button>
+              <button onClick={handleSelectMinusOperator}>-</button>
             </td>
           </tr>
           <tr>
@@ -175,34 +250,27 @@ function App() {
               <button onClick={() => handleClickNumber('3')}>3</button>
             </td>
             <td>
-              <button onClick={() => handleSelectPlusOperator()}>+</button>
+              <button onClick={handleSelectPlusOperator}>+</button>
             </td>
           </tr>
           <tr>
             <td>
               <button onClick={() => handleClickNumber('0')}>0</button>
             </td>
-            <td>.</td>
             <td>
-              <button onClick={() => handleClickNumber('clear')}>AC</button>
+              <button onClick={handleAddFloatPoint}>.</button>
             </td>
             <td>
-              <button onClick={() => handleClickNumber('equal')}>=</button>
+              <button onClick={handleResetCalculator}>AC</button>
+            </td>
+            <td>
+              <button onClick={() => handleClickResult()}>=</button>
             </td>
           </tr>
 
         </tbody>
       </table>
-      {/* <button onClick={() => setCount((count) => count + 1)}>
-        count is {count}
-      </button>
-      <p>
-        Edit <code>src/App.tsx</code> and save to test HMR
-      </p> */}
       </div>
-      {/* <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p> */}
     </div>
   )
 }
