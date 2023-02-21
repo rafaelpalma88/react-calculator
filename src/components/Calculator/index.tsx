@@ -28,11 +28,11 @@ export const Calculator = () => {
     dispatch({ type: 'SELECT_DIVISION_OPERATOR' });
   }
 
-  function handleClickNumber(value: string): any {
+  function handleClickNumber(value: string): void {
     dispatch({ type: 'ADD_NUM', number: value });
   }
 
-  function handleAddFloatPoint(): any {
+  function handleAddFloatPoint(): void {
     dispatch({ type: 'ADD_FLOAT_POINT' });
   }
 
