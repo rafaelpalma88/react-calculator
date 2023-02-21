@@ -14,7 +14,7 @@ interface CalculatorAction {
   }
 }
 
-export const calculatorReducer = (state: Calculator, action: CalculatorAction): Calculator => {
+export const calculatorReducer = (state: Calculator, action: any): Calculator => {
   switch (action.type) {
     case ActionTypes.ADD_NUM: {
       const number = action?.payload?.number
